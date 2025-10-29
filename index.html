@@ -2,36 +2,51 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Voice Agent - Pełne Okno (Iframe)</title>
+    <title>Voice Agent - Wymuszone Otwarcie</title>
     <style>
-        /* Styl dla kontenera, aby zająć całe okno i nie pokazywać pasków przewijania (idealne dla trybu kiosku) */
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden; 
-            height: 100%;
-        }
-        /* Kontener Iframe, który wyświetli agenta na pełnym ekranie */
-        #voiceflow-iframe-container {
-            width: 100%;
-            height: 100vh; /* Zapewnia pełną wysokość ekranu */
-            border: none;
+        /* Ukrywamy domyślny dymek, zanim zdąży się pojawić, 
+           aby uniknąć "mignięcia" go na ekranie */
+        #voiceflow-chat-launcher {
+            display: none !important;
         }
     </style>
 </head>
 <body>
     
-    <iframe 
-        id="voiceflow-iframe-container" 
-        
-        /* KLUCZOWY ADRES URL: Zmień '69020179adddab713d9867ab' na swoje Project ID.
-           Adres URL otwiera agenta Voiceflow bezpośrednio w trybie konwersacyjnym.
-        */
-        src="https://general-runtime.voiceflow.com/69020179adddab713d9867ab/production"
-        
-        allow="microphone; fullscreen" /* Wymagane, aby umożliwić dostęp do mikrofonu */
-        frameborder="0"
-    ></iframe>
+    <script type="text/javascript">
+        (function(d, t) {
+            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            v.onload = function() {
+                window.voiceflow.chat.load({
+                    verify: { projectID: '69020179adddab713d9867ab' },
+                    url: 'https://general-runtime.voiceflow.com',
+                    versionID: 'production',
+                    voice: {
+                        url: "https://runtime-api.voiceflow.com"
+                    }
+                    // Celowo usunęliśmy 'mode' i 'target', aby nie powodować konfliktu
+                });
+            }
+            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; 
+            v.type = "text/javascript"; 
+            s.parentNode.insertBefore(v, s);
+        })(document, 'script');
+    </script>
 
-    </body>
+    <script type="text/javascript">
+        function openVoiceflowChat() {
+            // Sprawdzamy, czy API Voiceflow (window.voiceflow.chat) jest już gotowe
+            if (window.voiceflow && window.voiceflow.chat) {
+                // Jeśli tak, wydajemy polecenie otwarcia okna
+                window.voiceflow.chat.open();
+            } else {
+                // Jeśli nie, spróbuj ponownie za 100 milisekund
+                setTimeout(openVoiceflowChat, 100);
+            }
+        }
+        
+        // Rozpocznij próbę otwarcia okna po załadowaniu strony
+        window.onload = openVoiceflowChat;
+    </script>
+</body>
 </html>
