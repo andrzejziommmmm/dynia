@@ -2,75 +2,61 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Aktywny Agent Głosowy Voiceflow - DEV</title>
+    <title>Voice Agent Zawsze Aktywny - Voiceflow</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f5;
-        }
-        .container {
-            width: 400px; /* Szerokość okna czatu */
-            max-width: 90vw; 
-            height: 600px; /* Wysokość okna czatu */
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-            background-color: #fff;
-            margin-top: 20px;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            text-align: center;
-        }
-        /* Kontener, w którym osadzony jest widżet */
+        /* Styl dla kontenera, aby widżet zajmował całe dostępne miejsce */
         #voiceflow-chat-frame {
-            height: 100%;
             width: 100%;
+            height: 100vh; /* Cała wysokość widoku (Viewport Height) */
+            border: none;
+        }
+        /* Usuwamy marginesy i paski przewijania, idealne dla trybu kiosku */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
         }
     </style>
 </head>
 <body>
-    <h1>Mój Agent AI Głosowy (Wersja Deweloperska)</h1>
     
-    <div class="container">
-        <div id="voiceflow-chat-frame"></div>
-    </div>
+    <div id="voiceflow-chat-frame"></div>
 
     <script type="text/javascript">
+        // Używamy Twojego skryptu z dodanymi kluczowymi opcjami
         (function(d, t) {
             var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-            
             v.onload = function() {
-              window.voiceflow.chat.load({
-                verify: { 
-                  // TWÓJ ID PROJEKTU:
-                  projectID: '69020179adddab713d9867ab' 
-                }, 
-                url: 'https://cdn.voiceflow.com/widget/bundle.css',
-                
-                // Kluczowe ustawienie: WERSJA DEWELOPERSKA
-                versionID: 'development', 
-                
-                // Ustawienia dla stałego, otwartego agenta:
-                mode: 'embedded', 
-                target: d.getElementById('voiceflow-chat-frame'), 
-                autostart: true 
-              });
+                window.voiceflow.chat.load({
+                    // Twoje podstawowe dane projektu:
+                    verify: { projectID: '69020179adddab713d9867ab' },
+                    url: 'https://general-runtime.voiceflow.com',
+                    versionID: 'production',
+                    voice: {
+                        url: "https://runtime-api.voiceflow.com"
+                    },
+                    
+                    // **********************************************
+                    // KLUCZOWE OPCJE DLA ZAWSZE OTWARTEGO AGENTA GŁOSOWEGO:
+                    // **********************************************
+                    
+                    // 1. Wymusza tryb osadzony (Embedded Mode) zamiast dymka (Bubble)
+                    mode: 'embedded',
+                    
+                    // 2. Wskazuje element HTML, w którym agent ma się osadzić
+                    target: d.getElementById('voiceflow-chat-frame'), 
+                    
+                    // 3. Wymusza natychmiastowe rozpoczęcie sesji 
+                    // (Gotowość do nasłuchiwania / autostart konwersacji)
+                    autostart: true 
+
+                });
             }
-            
-            v.src = 'https://cdn.voiceflow.com/widget/bundle.js';
-            s.parentNode.insertBefore(v, s);
+            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
         })(document, 'script');
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
