@@ -2,16 +2,17 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Osadzony Agent Głosowy Voiceflow</title>
+    <title>Voice Agent - Pełne Okno (Iframe)</title>
     <style>
-        /* Styl dla kontenera, aby widżet zajmował całe okno i nie miał pasków przewijania (Kiosk Mode) */
+        /* Styl dla kontenera, aby zająć całe okno i nie pokazywać pasków przewijania (idealne dla trybu kiosku) */
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden; 
             height: 100%;
         }
-        #voiceflow-chat-frame {
+        /* Kontener Iframe, który wyświetli agenta na pełnym ekranie */
+        #voiceflow-iframe-container {
             width: 100%;
             height: 100vh; /* Zapewnia pełną wysokość ekranu */
             border: none;
@@ -20,46 +21,17 @@
 </head>
 <body>
     
-    <div id="voiceflow-chat-frame"></div>
+    <iframe 
+        id="voiceflow-iframe-container" 
+        
+        /* KLUCZOWY ADRES URL: Zmień '69020179adddab713d9867ab' na swoje Project ID.
+           Adres URL otwiera agenta Voiceflow bezpośrednio w trybie konwersacyjnym.
+        */
+        src="https://general-runtime.voiceflow.com/69020179adddab713d9867ab/production"
+        
+        allow="microphone; fullscreen" /* Wymagane, aby umożliwić dostęp do mikrofonu */
+        frameborder="0"
+    ></iframe>
 
-    <script type="text/javascript">
-        (function(d, t) {
-            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-            v.onload = function() {
-                window.voiceflow.chat.load({
-                    // Twoje podstawowe dane projektu:
-                    verify: { projectID: '69020179adddab713d9867ab' },
-                    url: 'https://general-runtime.voiceflow.com',
-                    versionID: 'production',
-                    voice: {
-                        url: "https://runtime-api.voiceflow.com"
-                    },
-                    
-                    // **********************************************
-                    // USTAWIENIA DLA WIDOCZNOŚCI I AUTOMATYCZNEGO STARTU:
-                    // **********************************************
-                    
-                    // 1. Wymusza tryb osadzony (wyświetla się wewnątrz kontenera DIV)
-                    mode: 'embedded',
-                    
-                    // 2. Wskazuje, który element ma być kontenerem (ten z DIV)
-                    target: d.getElementById('voiceflow-chat-frame'), 
-                    
-                    // 3. Wymusza natychmiastowe rozpoczęcie sesji / konwersacji
-                    autostart: true 
-
-                });
-            }
-            // Ważne: To jest ścieżka Twojego widżetu
-            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; 
-            v.type = "text/javascript"; 
-            s.parentNode.insertBefore(v, s);
-        })(document, 'script');
-    </script>
-</body>
-</html>
-</body>
-</html>
-    </script>
-</body>
+    </body>
 </html>
