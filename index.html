@@ -1,33 +1,71 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Voiceflow Chat Example</title>
+    <meta charset="UTF-8">
+    <title>Voice Agent Zawsze Aktywny</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .container {
+            width: 400px;
+            height: 600px; /* Wysokość kontenera dla widżetu */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Mój Zawsze Aktywny Agent AI</h1>
+        <div id="voiceflow-chat-frame" style="height: 100%; width: 100%;"></div>
+    </div>
 
-  <h1>Przykład Voiceflow Chat</h1>
+    <script type="text/javascript">
+        // 1. SKOPIUJ SWÓJ WŁASNY FRAGMENT KODU VOICEFLOW TUTAJ
+        // Zmień 'TWÓJ_PROJEKT_ID' na ID Twojego projektu z Voiceflow
+        
+        (function(d, t) {
+            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            v.onload = function() {
+              window.voiceflow.chat.load({
+                verify: { projectID: 'TWÓJ_PROJEKT_ID' }, // Zmień to na ID swojego projektu!
+                url: 'https://cdn.voiceflow.com/widget/bundle.css', // Może się różnić
+                versionID: 'development', // Lub 'production' po opublikowaniu
+                
+                // 2. KLUCZOWE USTAWIENIA DLA ZAWSZE OTWARTEGO AGENTA:
+                
+                // Ustawia tryb osadzony zamiast domyślnego dymka (bubble)
+                mode: 'embedded', 
+                
+                // Definiuje element HTML, w którym widżet ma się otworzyć
+                target: d.getElementById('voiceflow-chat-frame'), 
+                
+                // Wymusza rozpoczęcie sesji natychmiast po załadowaniu
+                autostart: true 
 
-  <!-- Tutaj widget Voiceflow zostanie wczytany -->
-  <script type="text/javascript">
-    (function(d, t) {
-        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-        v.onload = function() {
-          window.voiceflow.chat.load({
-            verify: { projectID: '69020179adddab713d9867ab' },
-            url: 'https://general-runtime.voiceflow.com',
-            versionID: 'production',
-            voice: {
-              url: "https://runtime-api.voiceflow.com"
+              });
             }
-          });
-        }
-        v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs";
-        v.type = "text/javascript";
-        s.parentNode.insertBefore(v, s);
-    })(document, 'script');
-  </script>
-
+            v.src = 'https://cdn.voiceflow.com/widget/bundle.js';
+            s.parentNode.insertBefore(v, s);
+        })(document, 'script');
+    </script>
 </body>
 </html>
 
