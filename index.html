@@ -2,19 +2,19 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Voice Agent Zawsze Aktywny - Voiceflow</title>
+    <title>Osadzony Agent Głosowy Voiceflow</title>
     <style>
-        /* Styl dla kontenera, aby widżet zajmował całe dostępne miejsce */
-        #voiceflow-chat-frame {
-            width: 100%;
-            height: 100vh; /* Cała wysokość widoku (Viewport Height) */
-            border: none;
-        }
-        /* Usuwamy marginesy i paski przewijania, idealne dla trybu kiosku */
+        /* Styl dla kontenera, aby widżet zajmował całe okno i nie miał pasków przewijania (Kiosk Mode) */
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden; 
+            height: 100%;
+        }
+        #voiceflow-chat-frame {
+            width: 100%;
+            height: 100vh; /* Zapewnia pełną wysokość ekranu */
+            border: none;
         }
     </style>
 </head>
@@ -23,7 +23,6 @@
     <div id="voiceflow-chat-frame"></div>
 
     <script type="text/javascript">
-        // Używamy Twojego skryptu z dodanymi kluczowymi opcjami
         (function(d, t) {
             var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
             v.onload = function() {
@@ -37,24 +36,28 @@
                     },
                     
                     // **********************************************
-                    // KLUCZOWE OPCJE DLA ZAWSZE OTWARTEGO AGENTA GŁOSOWEGO:
+                    // USTAWIENIA DLA WIDOCZNOŚCI I AUTOMATYCZNEGO STARTU:
                     // **********************************************
                     
-                    // 1. Wymusza tryb osadzony (Embedded Mode) zamiast dymka (Bubble)
+                    // 1. Wymusza tryb osadzony (wyświetla się wewnątrz kontenera DIV)
                     mode: 'embedded',
                     
-                    // 2. Wskazuje element HTML, w którym agent ma się osadzić
+                    // 2. Wskazuje, który element ma być kontenerem (ten z DIV)
                     target: d.getElementById('voiceflow-chat-frame'), 
                     
-                    // 3. Wymusza natychmiastowe rozpoczęcie sesji 
-                    // (Gotowość do nasłuchiwania / autostart konwersacji)
+                    // 3. Wymusza natychmiastowe rozpoczęcie sesji / konwersacji
                     autostart: true 
 
                 });
             }
-            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+            // Ważne: To jest ścieżka Twojego widżetu
+            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; 
+            v.type = "text/javascript"; 
+            s.parentNode.insertBefore(v, s);
         })(document, 'script');
     </script>
+</body>
+</html>
 </body>
 </html>
     </script>
