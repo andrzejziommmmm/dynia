@@ -2,71 +2,63 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Voice Agent - Wymuszone Otwarcie (Auto-Click)</title>
+    <title>Osadzony Agent Voiceflow (Metoda 'render')</title>
     <style>
-        /* Możemy spróbować ukryć sam dymek, aby nie "mignął" 
-           zanim zostanie kliknięty */
-        #voiceflow-chat-launcher {
-            opacity: 0 !important;
-            pointer-events: none !important;
+        /* Styl dla kontenera, aby zająć całe okno i nie pokazywać pasków przewijania (Kiosk Mode) */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            height: 100%;
+        }
+        /* Ten DIV będzie naszym celem (target) */
+        #voiceflow-chat-frame {
+            width: 100%;
+            height: 100vh; /* Zapewnia pełną wysokość ekranu */
+            border: none;
         }
     </style>
 </head>
 <body>
     
+    <div id="voiceflow-chat-frame"></div>
+
     <script type="text/javascript">
       (function(d, t) {
           var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
           v.onload = function() {
             window.voiceflow.chat.load({
+              // Twoje podstawowe dane projektu:
               verify: { projectID: '69020179adddab713d9867ab' },
               url: 'https://general-runtime.voiceflow.com',
               versionID: 'production',
               voice: {
                 url: "https://runtime-api.voiceflow.com"
-              }
+              },
+
+              // *********************************************************
+              // KLUCZOWE USTAWIENIA OSADZANIA (PRAWIDŁOWA SKŁADNIA):
+              // *********************************************************
+              
+              render: {
+                // Mówimy mu, że ma być osadzony
+                mode: 'embedded',
+                
+                // Wskazujemy mu, Gdzie ma się osadzić
+                // (w naszym DIV-ie o ID 'voiceflow-chat-frame')
+                target: document.getElementById('voiceflow-chat-frame')
+              },
+
+              // Dodajemy to, aby agent spróbował wystartować
+              // rozmowę automatycznie po załadowaniu
+              autostart: true
+
             });
           }
-          v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+          v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; 
+          v.type = "text/javascript"; 
+          s.parentNode.insertBefore(v, s);
       })(document, 'script');
     </script>
-
-    <script type="text/javascript">
-        // Ta funkcja będzie szukać launchera i go klikać
-        const autoClickLauncher = (mutationsList, observer) => {
-            // Standardowe ID dymka Voiceflow to 'voiceflow-chat-launcher'
-            const launcher = document.getElementById('voiceflow-chat-launcher');
-            
-            if (launcher) {
-                console.log('Znaleziono launcher Voiceflow. Próba wymuszonego otwarcia...');
-                
-                // Sprawdzamy, czy okno nie jest już otwarte (na wszelki wypadek)
-                if (launcher.getAttribute('aria-hidden') === 'true') {
-                    // Czasem .click() nie działa, używamy 'window.voiceflow.chat.open()'
-                    if (window.voiceflow && window.voiceflow.chat) {
-                         window.voiceflow.chat.open();
-                         console.log('Otwarto za pomocą API .open()');
-                    }
-                } else {
-                     // Jeśli API nie zadziała, próbujemy symulować kliknięcie
-                     launcher.click();
-                     console.log('Otwarto za pomocą symulacji .click()');
-                }
-                
-                observer.disconnect(); // Znaleźliśmy go, przestajemy obserwować
-            }
-        };
-
-        // Ustawiamy obserwatora, który śledzi zmiany w strukturze strony (DOM)
-        // Czeka, aż Voiceflow doda swój dymek do <body>
-        const observer = new MutationObserver(autoClickLauncher);
-        observer.observe(document.body, { 
-            childList: true, // Obserwuj dodawanie/usuwanie dzieci
-            subtree: true    // Obserwuj również w zagnieżdżonych elementach
-        });
-
-        console.log('Obserwator strony aktywny. Czekam na dymek Voiceflow...');
-    </script>
-
 </body>
 </html>
