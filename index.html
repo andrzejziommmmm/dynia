@@ -2,51 +2,71 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Voice Agent - Wymuszone Otwarcie</title>
+    <title>Voice Agent - Wymuszone Otwarcie (Auto-Click)</title>
     <style>
-        /* Ukrywamy domyślny dymek, zanim zdąży się pojawić, 
-           aby uniknąć "mignięcia" go na ekranie */
+        /* Możemy spróbować ukryć sam dymek, aby nie "mignął" 
+           zanim zostanie kliknięty */
         #voiceflow-chat-launcher {
-            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
     </style>
 </head>
 <body>
     
     <script type="text/javascript">
-        (function(d, t) {
-            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-            v.onload = function() {
-                window.voiceflow.chat.load({
-                    verify: { projectID: '69020179adddab713d9867ab' },
-                    url: 'https://general-runtime.voiceflow.com',
-                    versionID: 'production',
-                    voice: {
-                        url: "https://runtime-api.voiceflow.com"
-                    }
-                    // Celowo usunęliśmy 'mode' i 'target', aby nie powodować konfliktu
-                });
-            }
-            v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; 
-            v.type = "text/javascript"; 
-            s.parentNode.insertBefore(v, s);
-        })(document, 'script');
+      (function(d, t) {
+          var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+          v.onload = function() {
+            window.voiceflow.chat.load({
+              verify: { projectID: '69020179adddab713d9867ab' },
+              url: 'https://general-runtime.voiceflow.com',
+              versionID: 'production',
+              voice: {
+                url: "https://runtime-api.voiceflow.com"
+              }
+            });
+          }
+          v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+      })(document, 'script');
     </script>
 
     <script type="text/javascript">
-        function openVoiceflowChat() {
-            // Sprawdzamy, czy API Voiceflow (window.voiceflow.chat) jest już gotowe
-            if (window.voiceflow && window.voiceflow.chat) {
-                // Jeśli tak, wydajemy polecenie otwarcia okna
-                window.voiceflow.chat.open();
-            } else {
-                // Jeśli nie, spróbuj ponownie za 100 milisekund
-                setTimeout(openVoiceflowChat, 100);
+        // Ta funkcja będzie szukać launchera i go klikać
+        const autoClickLauncher = (mutationsList, observer) => {
+            // Standardowe ID dymka Voiceflow to 'voiceflow-chat-launcher'
+            const launcher = document.getElementById('voiceflow-chat-launcher');
+            
+            if (launcher) {
+                console.log('Znaleziono launcher Voiceflow. Próba wymuszonego otwarcia...');
+                
+                // Sprawdzamy, czy okno nie jest już otwarte (na wszelki wypadek)
+                if (launcher.getAttribute('aria-hidden') === 'true') {
+                    // Czasem .click() nie działa, używamy 'window.voiceflow.chat.open()'
+                    if (window.voiceflow && window.voiceflow.chat) {
+                         window.voiceflow.chat.open();
+                         console.log('Otwarto za pomocą API .open()');
+                    }
+                } else {
+                     // Jeśli API nie zadziała, próbujemy symulować kliknięcie
+                     launcher.click();
+                     console.log('Otwarto za pomocą symulacji .click()');
+                }
+                
+                observer.disconnect(); // Znaleźliśmy go, przestajemy obserwować
             }
-        }
-        
-        // Rozpocznij próbę otwarcia okna po załadowaniu strony
-        window.onload = openVoiceflowChat;
+        };
+
+        // Ustawiamy obserwatora, który śledzi zmiany w strukturze strony (DOM)
+        // Czeka, aż Voiceflow doda swój dymek do <body>
+        const observer = new MutationObserver(autoClickLauncher);
+        observer.observe(document.body, { 
+            childList: true, // Obserwuj dodawanie/usuwanie dzieci
+            subtree: true    // Obserwuj również w zagnieżdżonych elementach
+        });
+
+        console.log('Obserwator strony aktywny. Czekam na dymek Voiceflow...');
     </script>
+
 </body>
 </html>
